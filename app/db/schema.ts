@@ -6,7 +6,8 @@ export const userTable = snakeCase.table("users", {
     password: varchar().notNull(),
     ip: varchar().notNull(),
     githubApiKey: varchar(),
-    sessionKey: varchar(),
+    sessionKey: varchar().notNull(),
+    sessionKeyCreation: integer().notNull(),
     projects: integer().array(),
 });
 
@@ -18,4 +19,9 @@ export const projectTable = snakeCase.table("projects", {
     targetRepo: varchar().notNull(),
     checkedTarget: boolean(),
     owner: integer().notNull(),
+    superAdmins: integer().array(),
+    admins: integer().array(),
+    contributors: integer().array(),
+    isPublic: boolean().notNull(),
+    requireCheck: boolean().notNull(),
 });

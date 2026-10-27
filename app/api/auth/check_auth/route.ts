@@ -2,9 +2,10 @@ import {db} from "@/app/db";
 import {userTable} from "@/app/db/schema";
 import {eq} from "drizzle-orm";
 import {NextResponse} from "next/server";
-import {dbError, createSession} from "@/app/util/db";
+import {dbError} from "@/app/util/db";
 import {cookies} from "next/headers";
-import {verify} from "argon2";
+import {hash, verify} from "argon2";
+import {checkExpire, createSession} from "@/app/util/session";
 
 export async function POST(req: Request) {
     try{
@@ -20,24 +21,23 @@ export async function POST(req: Request) {
             .limit(1);
 
         if(userSearch.length == 0) {
-            return NextResponse.json({error: "Cannot find such user"}, {status: 401});
+            return NextResponse.json({error: "Cannot find such user"}, {status: 404});
         }
 
         if(!await verify(userSearch[0].password, password)) {
             return NextResponse.json({error: "Invalid password"}, {status: 401});
         }
 
-        const oldSession = userSearch[0].sessionKey;
+        const sessionValid = !checkExpire(userSearch[0].sessionKeyCreation);
+        const oldSession = sessionValid && userSearch[0].sessionKey;
 
         const session = oldSession || createSession();
-        await db.update(userTable).set({sessionKey: session}).where(eq(userTable.pseudo, user));
+        await db.update(userTable)
+            .set({sessionKey: session, sessionKeyCreation: Date.now()})
+            .where(eq(userTable.pseudo, user));
 
         const store = await cookies();
-        store.set("session", session, {
-            httpOnly: true,
-            maxAge: 60 * 60 * 24 * 30
-        });
-        store.set("projects", userSearch[0].projects?.join(";") || "", {
+        store.set("session", await hash(session), {
             httpOnly: true,
             maxAge: 60 * 60 * 24 * 30
         });

@@ -6,7 +6,7 @@ export function proxy(request: NextRequest) {
 
     if (pathname !== "/" && !session) {
         return NextResponse.redirect(
-            new URL("/auth/login", request.url)
+            new URL(`/auth/login?url=${request.url}`, request.url)
         );
     }
 

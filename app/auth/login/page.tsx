@@ -1,6 +1,6 @@
 'use client'
 
-import {useRef, useState} from "react";
+import {use, useRef, useState} from "react";
 import {useRouter} from "next/navigation";
 import Link from "next/link";
 
@@ -18,6 +18,8 @@ export default function Login({searchParams}: AwaitingRedirect) {
 
     const router = useRouter();
 
+    const redirect = use(searchParams).url || "/";
+
     return (
         <main>
             <h1>Creating an OverTranslated account</h1>
@@ -31,7 +33,7 @@ export default function Login({searchParams}: AwaitingRedirect) {
             </section>
             <p style={{color: "red"}}>{statusInfo}</p>
             <button onClick={submit}>Submit</button>
-            <Link href='./signin'>Create an account</Link>
+            <Link href={'./signin?url=' + redirect}>Create an account</Link>
         </main>
     );
 
@@ -50,7 +52,7 @@ export default function Login({searchParams}: AwaitingRedirect) {
         if(request.error) {
             setStatusInfo(request.error);
         } else {
-            router.replace((await searchParams).url || "/");
+            router.replace(redirect);
             router.refresh();
         }
     }

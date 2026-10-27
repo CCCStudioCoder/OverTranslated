@@ -1,6 +1,6 @@
 'use client'
 
-import {useRef, useState} from "react";
+import {use, useRef, useState} from "react";
 import {AwaitingRedirect} from "@/app/auth/login/page";
 import {useRouter} from "next/navigation";
 import Link from "next/link";
@@ -13,6 +13,8 @@ export default function Signing({ searchParams}: AwaitingRedirect) {
     const [statusInfo, setStatusInfo] = useState("");
 
     const router = useRouter();
+
+    const redirect = use(searchParams).url || "/";
 
     return (
         <main>
@@ -31,7 +33,7 @@ export default function Signing({ searchParams}: AwaitingRedirect) {
             </section>
             <p style={{color: "red"}} >{statusInfo}</p>
             <button onClick={submit}>Submit</button>
-            <Link href={"./login"}>Log in</Link>
+            <Link href={"./login?url=" + redirect}>Log in</Link>
         </main>
     );
 
@@ -39,6 +41,10 @@ export default function Signing({ searchParams}: AwaitingRedirect) {
         const user = userRef.current!.value;
         const pw = pwRef.current!.value;
         const cfPw = cfPwRef.current!.value;
+
+        if(user.length < 6 || pw.length < 6 || pw.length > 20 || user.length > 20) {
+            setStatusInfo("Please enter username and password with between 6 and 20 characters.");
+        }
 
         if(pw !== cfPw) {
             return;
@@ -55,7 +61,7 @@ export default function Signing({ searchParams}: AwaitingRedirect) {
         if(request.error) {
             setStatusInfo(request.error);
         } else {
-            router.replace((await searchParams).url || "/");
+            router.replace(redirect);
             router.refresh();
         }
     }

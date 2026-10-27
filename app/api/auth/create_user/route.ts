@@ -1,10 +1,11 @@
 import {NextResponse} from "next/server";
 import {db} from "@/app/db";
 import {userTable} from "@/app/db/schema";
-import {dbError, createSession} from "@/app/util/db";
+import {dbError} from "@/app/util/db";
 import {cookies} from "next/headers";
 import {hash} from "argon2";
 import {eq} from "drizzle-orm";
+import {createSession} from "@/app/util/session";
 
 export async function POST(req: Request) {
     try {
@@ -36,15 +37,12 @@ export async function POST(req: Request) {
             pseudo: userName,
             password: await hash(password),
             ip: ip,
-            sessionKey: session
+            sessionKey: session,
+            sessionKeyCreation: Date.now()
         });
 
         const store = await cookies();
-        store.set("session", session, {
-            httpOnly: true,
-            maxAge: 60 * 60 * 24 * 30
-        });
-        store.set("projects", "", {
+        store.set("session", await hash(session), {
             httpOnly: true,
             maxAge: 60 * 60 * 24 * 30
         });
