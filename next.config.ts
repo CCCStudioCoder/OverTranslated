@@ -15,6 +15,18 @@ const nextConfig: NextConfig = {
       },
     },
   },
+  redirects: () => [
+    {
+      source: '/login',
+      destination: '/auth/login',
+      permanent: true,
+    },
+    {
+      source: '/auth',
+      destination: '/auth/login',
+      permanent: true,
+    },
+  ]
 };
 
 export default nextConfig;
