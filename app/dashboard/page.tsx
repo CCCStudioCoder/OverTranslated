@@ -19,18 +19,16 @@ export default function Dashboard() {
                             {createProjectDiv(project)}
                         </Suspense>
                     )) :
-                    <>
-                        <p>You don't have any projects for now</p>
-                        <button>Create one</button>
-                        <button>Join an already existent project</button>
-                    </>
+                    <p>You don't have any projects for now</p>
                 }
+                <button>Create a project</button>
+                <button>Join an already existent project</button>
             </div>
         </main>
     );
 
     async function createProjectDiv(id: number) {
-        const project: Project = await (await fetch(`/api/get_project`, {
+        const project: Project = await (await fetch(`/api/projects`, {
             method: "POST",
             body: JSON.stringify({ id }),
         })).json();

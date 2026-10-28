@@ -2,13 +2,13 @@ import {boolean, integer, serial, snakeCase, varchar} from "drizzle-orm/pg-core"
 
 export const userTable = snakeCase.table("users", {
     id: serial().primaryKey(),
-    pseudo: varchar().notNull(),
+    pseudo: varchar().notNull().unique(),
     password: varchar().notNull(),
-    ip: varchar().notNull(),
+    ip: varchar().notNull().unique(),
     githubApiKey: varchar(),
-    sessionKey: varchar().notNull(),
+    sessionKey: varchar().notNull().unique(),
     sessionKeyCreation: integer().notNull(),
-    projects: integer().array(),
+    projects: integer().array().notNull().default([]),
 });
 
 export const projectTable = snakeCase.table("projects", {
@@ -19,9 +19,17 @@ export const projectTable = snakeCase.table("projects", {
     targetRepo: varchar().notNull(),
     checkedTarget: boolean(),
     owner: integer().notNull(),
-    superAdmins: integer().array(),
-    admins: integer().array(),
-    contributors: integer().array(),
+    admins: integer().array().notNull().default([]),
+    contributors: integer().array().notNull().default([]),
     isPublic: boolean().notNull(),
     requireCheck: boolean().notNull(),
 });
+
+export const inviteTokenTable = snakeCase.table("inviteTokens", {
+    id: serial().primaryKey(),
+    name: varchar().notNull().unique(),
+    linksTo: integer().notNull(),
+    admin: boolean().notNull(),
+    expireDate: integer().notNull(),
+    leftUses: integer().notNull()
+})

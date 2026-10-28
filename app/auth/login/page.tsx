@@ -32,10 +32,14 @@ export default function Login({searchParams}: AwaitingRedirect) {
                 <input type="password" ref={passwordRef} />
             </section>
             <p style={{color: "red"}}>{statusInfo}</p>
-            <button onClick={submit}>Submit</button>
+            <button onClick={handle}>Submit</button>
             <Link href={'./signin?url=' + redirect}>Create an account</Link>
         </main>
     );
+
+    function handle() {
+        setTimeout(submit, 2000); // Avoid brute-force
+    }
 
     async function submit() {
         const user = userRef.current!.value;

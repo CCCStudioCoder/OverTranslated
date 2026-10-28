@@ -32,10 +32,14 @@ export default function Signing({ searchParams}: AwaitingRedirect) {
                 <input type="text" ref={cfPwRef} />
             </section>
             <p style={{color: "red"}} >{statusInfo}</p>
-            <button onClick={submit}>Submit</button>
+            <button onClick={handle}>Submit</button>
             <Link href={"./login?url=" + redirect}>Log in</Link>
         </main>
     );
+
+    function handle() {
+        setTimeout(submit, 2000);
+    }
 
     async function submit() {
         const user = userRef.current!.value;

@@ -4,6 +4,7 @@
     <data-source source="LOCAL" name="Neon" uuid="7c0c2cd7-57ab-43ab-8e1b-185db19035fa">
       <driver-ref>postgresql</driver-ref>
       <synchronize>true</synchronize>
+      <configured-by-url>true</configured-by-url>
       <jdbc-driver>org.postgresql.Driver</jdbc-driver>
       <jdbc-url>postgresql://neondb_owner:npg_dDew5bTJr7na@ep-cool-wind-b5a46v8m-pooler.c-7.us-east-2.aws.neon.tech/neondb?sslmode=require&amp;channel_binding=require</jdbc-url>
       <jdbc-additional-properties>

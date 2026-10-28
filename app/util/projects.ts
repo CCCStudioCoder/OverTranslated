@@ -6,7 +6,6 @@ export function targetURL(project: Project) {
 
 export enum Role {
     OWNER = "Owner",
-    SUPERADMIN = "Super Admin",
     ADMIN = "Administrator",
     CONTRIBUTOR = "Contributor",
     NONE = "None",
@@ -14,8 +13,12 @@ export enum Role {
 
 export function roleIn(userId: number, project: Project): Role {
     if (project.owner === userId) return Role.OWNER;
-    if (project.superAdmins && project.superAdmins.includes(userId)) return Role.SUPERADMIN;
     if (project.admins && project.admins.includes(userId)) return Role.ADMIN;
     if (project.contributors && project.contributors.includes(userId)) return Role.CONTRIBUTOR;
     return Role.NONE;
+}
+
+export function hasRights(userId: number, project: Project): boolean {
+    const role = roleIn(userId, project);
+    return [Role.OWNER, Role.ADMIN].includes(role);
 }

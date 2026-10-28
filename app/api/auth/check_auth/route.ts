@@ -6,13 +6,14 @@ import {dbError} from "@/app/util/db";
 import {cookies} from "next/headers";
 import {hash, verify} from "argon2";
 import {checkExpire, createSession} from "@/app/util/session";
+import HttpStatusCode from "@/app/util/status-code";
 
 export async function POST(req: Request) {
     try{
         const { user, password } = await req.json();
 
         if(typeof user != "string" || typeof password != "string") {
-            return NextResponse.json({error: "Bad request"}, {status: 400});
+            return NextResponse.json({error: "Bad request"}, {status: HttpStatusCode.BAD_REQUEST});
         }
 
         const userSearch = await db.select()
@@ -21,11 +22,11 @@ export async function POST(req: Request) {
             .limit(1);
 
         if(userSearch.length == 0) {
-            return NextResponse.json({error: "Cannot find such user"}, {status: 404});
+            return NextResponse.json({error: "Cannot find such user"}, {status: HttpStatusCode.NOT_FOUND});
         }
 
         if(!await verify(userSearch[0].password, password)) {
-            return NextResponse.json({error: "Invalid password"}, {status: 401});
+            return NextResponse.json({error: "Invalid password"}, {status: HttpStatusCode.UNAUTHORIZED});
         }
 
         const sessionValid = !checkExpire(userSearch[0].sessionKeyCreation);
@@ -42,7 +43,7 @@ export async function POST(req: Request) {
             maxAge: 60 * 60 * 24 * 30
         });
 
-        return NextResponse.json({...userSearch[0]}, {status: 200});
+        return NextResponse.json({...userSearch[0]}, {status: HttpStatusCode.OK});
     } catch (e) {
         return dbError(e);
     }
