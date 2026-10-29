@@ -49,7 +49,7 @@ export async function POST(req: NextRequest) {
             projects: sql`array_append(${userTable}, ${tokenSearch[0].linksTo})`
         }).where(eq(userTable.id, userData!.id));
 
-        return NextResponse.json({name: project[0].name});
+        return NextResponse.json({project: project[0].name});
     } catch(e) {
         return dbError(e);
     }

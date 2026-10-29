@@ -62,7 +62,7 @@ export async function PATCH(req: NextRequest) {
 
         const update: any = {};
 
-        for(const prop of ["name", "desc", "ghOwner", "ghRepo", "isPublic", "requireCheck"]) {
+        for(const prop of ["name", "desc", "ghOwner", "ghRepo", "isPublic"]) {
             if(body[prop]) update[prop] = body[prop];
         }
 

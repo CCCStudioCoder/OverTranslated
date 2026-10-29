@@ -22,7 +22,6 @@ export const projectTable = snakeCase.table("projects", {
     admins: integer().array().notNull().default([]),
     contributors: integer().array().notNull().default([]),
     isPublic: boolean().notNull(),
-    requireCheck: boolean().notNull(),
 });
 
 export const inviteTokenTable = snakeCase.table("inviteTokens", {
