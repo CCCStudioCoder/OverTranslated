@@ -1,5 +1,5 @@
-import {NextRequest, NextResponse} from "next/server";
-import {createSession, validateSession} from "@/app/util/session";
+import {NextResponse} from "next/server";
+import {validateSession} from "@/app/util/session";
 import {dbError} from "@/app/util/db";
 import {db} from "@/app/db";
 import {userTable} from "@/app/db/schema";
@@ -8,9 +8,13 @@ import {eq, sql} from "drizzle-orm";
 import {hash, verify} from "argon2";
 import {cookies} from "next/headers";
 
-export async function PATCH(req: NextRequest) {
+export async function POST() {
+    return (await validateSession())[0];
+}
+
+export async function PATCH(req: Request) {
     try {
-        const { pseudo, oldPassword, newPassword, ghAPI: ghAppId, resetSession } = await req.json();
+        const { pseudo, oldPassword, newPassword, ghAPI: ghAppId } = await req.json();
 
         const [error, validAuth, userData] = await validateSession();
         if(!validAuth) {
@@ -34,16 +38,6 @@ export async function PATCH(req: NextRequest) {
         if(pseudo) update.pseudo = pseudo;
         if(ghAppId) update.githubAppId = ghAppId;
 
-        if(resetSession) {
-            const newSession = createSession();
-
-            const store = await cookies();
-            store.set("session", await hash(newSession));
-
-            update.sessionKey = newSession;
-            update.sessionKeyCreation = Date.now();
-        }
-
         await db.update(userTable)
             .set(update)
             .where(eq(userTable.id, userData!.id));
@@ -54,7 +48,7 @@ export async function PATCH(req: NextRequest) {
     }
 }
 
-export async function PUT(req: NextRequest) {
+export async function PUT(req: Request) {
     try {
         const { project } = await req.json();
 
@@ -75,7 +69,7 @@ export async function PUT(req: NextRequest) {
     }
 }
 
-export async function DELETE(req: NextRequest) {
+export async function DELETE(req: Request) {
     try {
         const { project, password } = await req.json();
 
@@ -87,6 +81,10 @@ export async function DELETE(req: NextRequest) {
         if(typeof password === "string") { // So it's the user you want to delete
             if(await verify(userData!.password, password)) {
                 await db.delete(userTable).where(eq(userTable.id, userData!.id));
+
+                const store = await cookies();
+                store.delete("session");
+
                 return NextResponse.json({}, {status: HttpStatusCode.OK})
             }
             return NextResponse.json({error: "Wrong password"}, {status: HttpStatusCode.UNAUTHORIZED});
