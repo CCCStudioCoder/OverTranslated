@@ -4,7 +4,7 @@ import {NextResponse} from "next/server";
 import HttpStatusCode from "@/app/util/status-code";
 import github from "@/app/util/github";
 
-export default async function GET() {
+export async function GET() {
     try {
         const [error, sessionValid, userData] = await validateSession();
         if(!sessionValid) {
