@@ -10,11 +10,12 @@ export default function Signing({ searchParams}: AwaitingRedirect) {
     const pwRef = useRef<HTMLInputElement>(null);
     const cfPwRef = useRef<HTMLInputElement>(null);
 
-    const [statusInfo, setStatusInfo] = useState("");
+    const { url, error } = use(searchParams);
+    const redirect = url || "/";
+
+    const [statusInfo, setStatusInfo] = useState(error || "");
 
     const router = useRouter();
-
-    const redirect = use(searchParams).url || "/";
 
     return (
         <main>

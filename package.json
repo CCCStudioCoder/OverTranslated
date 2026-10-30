@@ -11,14 +11,14 @@
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.2.0",
+    "@react-buddy/ide-toolbox-next": "^2.5.0",
     "argon2": "^0.45.1",
     "drizzle-orm": "^1.0.0-rc.5",
     "next": "16.4.2",
     "octokit": "^5.0.5",
     "react": "19.3.0",
     "react-dom": "19.3.0",
-    "server-only": "^0.0.1",
-    "@react-buddy/ide-toolbox-next": "^2.5.0"
+    "server-only": "^0.0.1"
   },
   "devDependencies": {
     "@tailwindcss/turbopack": "^4",

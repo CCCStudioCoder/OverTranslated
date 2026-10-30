@@ -16,7 +16,7 @@ export default function Dashboard() {
             <div>
                 {user.projects ? user.projects.map((project, index) => (
                         <Suspense key={index} fallback={<Loading height={200} width={1000} />}>
-                            {createProjectDiv(project)}
+                            <ProjectDiv id={project} />
                         </Suspense>
                     )) :
                     <p>You don't have any projects for now</p>
@@ -27,7 +27,7 @@ export default function Dashboard() {
         </main>
     );
 
-    async function createProjectDiv(id: number) {
+    async function ProjectDiv({id}: {id: number}) {
         const project: Project = await (await fetch(`/api/projects`, {
             method: "POST",
             body: JSON.stringify({ id }),

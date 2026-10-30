@@ -5,7 +5,8 @@ export const userTable = snakeCase.table("users", {
     pseudo: varchar().notNull().unique(),
     password: varchar().notNull(),
     ip: varchar().notNull().unique(),
-    githubApiKey: varchar(),
+    githubAppId: integer(),
+    githubAccount: varchar(),
     sessionKey: varchar().notNull().unique(),
     sessionKeyCreation: integer().notNull(),
     projects: integer().array().notNull().default([]),
@@ -17,7 +18,6 @@ export const projectTable = snakeCase.table("projects", {
     description: varchar(),
     targetOwner: varchar().notNull(),
     targetRepo: varchar().notNull(),
-    checkedTarget: boolean(),
     owner: integer().notNull(),
     admins: integer().array().notNull().default([]),
     contributors: integer().array().notNull().default([]),
@@ -31,4 +31,4 @@ export const inviteTokenTable = snakeCase.table("inviteTokens", {
     admin: boolean().notNull(),
     expireDate: integer().notNull(),
     leftUses: integer().notNull()
-})
+});

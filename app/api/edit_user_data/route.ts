@@ -10,7 +10,7 @@ import {cookies} from "next/headers";
 
 export async function PATCH(req: NextRequest) {
     try {
-        const { pseudo, oldPassword, newPassword, ghAPI, resetSession } = await req.json();
+        const { pseudo, oldPassword, newPassword, ghAPI: ghAppId, resetSession } = await req.json();
 
         const [error, validAuth, userData] = await validateSession();
         if(!validAuth) {
@@ -32,7 +32,7 @@ export async function PATCH(req: NextRequest) {
         }
 
         if(pseudo) update.pseudo = pseudo;
-        if(ghAPI) update.ghAPI = ghAPI;
+        if(ghAppId) update.githubAppId = ghAppId;
 
         if(resetSession) {
             const newSession = createSession();

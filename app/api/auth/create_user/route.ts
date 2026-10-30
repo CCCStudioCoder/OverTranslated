@@ -52,7 +52,7 @@ export async function POST(req: Request) {
             maxAge: 60 * 60 * 24 * 30
         });
 
-        return NextResponse.json({session: session}, {status: HttpStatusCode.CREATED});
+        return NextResponse.redirect("https://github.com/apps/spaceship-translate/installations/new/", {status: HttpStatusCode.CREATED});
     } catch(e) {
         return dbError(e);
     }

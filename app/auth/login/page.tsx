@@ -7,6 +7,7 @@ import Link from "next/link";
 export type AwaitingRedirect = {
     searchParams: Promise<{
         url?: string;
+        error?: string;
     }>;
 };
 
